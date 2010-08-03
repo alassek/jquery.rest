@@ -2,6 +2,27 @@
 
 A plugin to ease AJAX interaction with RESTful APIs such as Rails
 
+### Accepted Parameters ###
+
+There are three public jQuery methods created by this plugin:
+
+jQuery.create
+jQuery.read
+jQuery.update
+jQuery.destroy
+
+Each function accepts 1-4 parameters:
+
+    URL [ data ] [ success ] [ failure ]
+
+    URL: The url of the resource, which can include a dynamically populated value surrounded by {braces}
+    data: (optional) The data to post to the resource, also used to populate dynamic values.
+          In GET requests, data will be added to the url as query-string parameters
+    success: (optional) The success callback
+    failure: (optional) The failure callback
+
+In addition to these parameters, you can simply pass a standard jQuery.Ajax options object instead as the only parameter.
+
 ### Example ###
 
 Create a new 'task' record with a success callback
