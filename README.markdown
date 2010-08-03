@@ -4,7 +4,7 @@ A plugin to ease AJAX interaction with RESTful APIs such as Rails
 
 ### Accepted Parameters ###
 
-There are three public jQuery methods created by this plugin:
+There are four public jQuery methods created by this plugin:
 
     jQuery.create
     jQuery.read
