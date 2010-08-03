@@ -6,10 +6,10 @@ A plugin to ease AJAX interaction with RESTful APIs such as Rails
 
 There are three public jQuery methods created by this plugin:
 
-jQuery.create
-jQuery.read
-jQuery.update
-jQuery.destroy
+    jQuery.create
+    jQuery.read
+    jQuery.update
+    jQuery.destroy
 
 Each function accepts 1-4 parameters:
 
