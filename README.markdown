@@ -73,6 +73,15 @@ Delete a 'task' object with ID 54
     $.destroy('/tasks/54')
     
     [POST] '/tasks/54?_method=delete'
+    
+Delete a 'task' object using alternate syntax
+
+    $.destroy({
+      url: '/tasks/54',
+      success: function (response) {
+        alert('successfully deleted task.');
+      }
+    });
 
 ### Regarding authenticity_token ###
 
