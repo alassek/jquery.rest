@@ -13,7 +13,7 @@ There are four public jQuery methods created by this plugin:
 
 Each function accepts 1-4 parameters:
 
-    URL [ data ] [ success ] [ failure ]
+    URL [, data ] [, success ] [, failure ]
 
     URL: The url of the resource, which can include a dynamically populated value surrounded by {braces}
     data: (optional) The data to post to the resource, also used to populate dynamic values.
