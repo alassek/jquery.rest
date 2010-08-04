@@ -83,6 +83,7 @@
             
             settings.data = settings.data || "";
             
+            if ("AUTH_TOKEN" in window)
             if (!/^(get)$/i.test(settings.type))
             if (!/(authenticity_token=)/i.test(settings.data)) {
                 settings.data += (settings.data ? "&" : "") + "authenticity_token=" + encodeURIComponent(AUTH_TOKEN);
