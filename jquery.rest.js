@@ -25,7 +25,7 @@
     // jQuery doesn't provide a better way of intercepting the ajax settings object
     var _ajax = $.ajax, options;
     
-    var collect_options = function(url, data, callback, type) {
+    function collect_options (url, data, callback, type) {
         options = { dataType: 'json' };
         if (arguments.length == 1) {
             options = $.extend(options, url);            
@@ -56,9 +56,9 @@
                 dataType: type
             });
         }
-    };
+    }
     
-    var fill_url = function(url, data) {
+    function fill_url (url, data) {
         var key, u, val;
         for (key in data) {
             val = data[key];
@@ -69,7 +69,7 @@
             }
         }
         return url;
-    };
+    }
     
     $.extend({
         ajax: function(settings) {
