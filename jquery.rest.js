@@ -25,25 +25,20 @@
     // jQuery doesn't provide a better way of intercepting the ajax settings object
     var _ajax = $.ajax, options;
     
-    function collect_options (url, data, callback, type) {
+    function collect_options (url, data, success, error) {
         options = { dataType: 'json' };
         if (arguments.length == 1) {
-            options = $.extend(options, url);            
-            if (options['url'] && options['data']) options.url = fill_url(options.url, options.data);
+            options = $.extend(options, url);
+            if ("url" in options)
+            if ("data" in options) {
+              fill_url(options.url, options.data);
+            }
         } else {
             // shift arguments if data argument was omitted
-            if ($.isFunction(data) || $.isArray(data)) {
-                type = type || callback;
-                callback = data;
+            if ($.isFunction(data)) {
+                error = success;
+                success = data;
                 data = null;
-            }
-            
-            var success, error;
-            if ($.isArray(callback)) {
-                success = callback[0];
-                error = callback[1];
-            } else {
-                success = callback;
             }
             
             url = fill_url(url, data);
@@ -52,8 +47,7 @@
                 url: url,
                 data: data,
                 success: success,
-                error: error,
-                dataType: type
+                error: error
             });
         }
     }
