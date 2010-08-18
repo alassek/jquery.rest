@@ -23,96 +23,103 @@
 (function($){
     
     // jQuery doesn't provide a better way of intercepting the ajax settings object
-    var _ajax = $.ajax, options;
+    var _ajax = $.ajax, 
+        options = { dataType: 'json' };
     
     function collect_options (url, data, success, error) {
-        options = { dataType: 'json' };
-        if (arguments.length == 1) {
-            options = $.extend(options, url);
-            if ("url" in options)
-            if ("data" in options) {
-              fill_url(options.url, options.data);
-            }
-        } else {
-            // shift arguments if data argument was omitted
-            if ($.isFunction(data)) {
-                error = success;
-                success = data;
-                data = null;
-            }
-            
-            url = fill_url(url, data);
-            
-            options = $.extend(options, {
-                url: url,
-                data: data,
-                success: success,
-                error: error
-            });
+      if (arguments.length === 1 && typeof arguments[0] !== "string") {
+        options = $.extend(options, url);
+        if ("url" in options)
+        if ("data" in options) {
+          fill_url(options.url, options.data);
         }
+      } else {
+        // shift arguments if data argument was omitted
+        if ($.isFunction(data)) {
+          error = success;
+          success = data;
+          data = null;
+        }
+
+        url = fill_url(url, data);
+
+        options = $.extend(options, {
+          url: url,
+          data: data,
+          success: success,
+          error: error
+        });
+      }
+    }
+            
+    function fill_url (url, data) {
+      var key, u, val;
+      for (key in data) {
+        val = data[key];
+        u = url.replace('{'+key+'}', val);
+        if (u != url) {
+          url = u;
+          delete data[key];
+        }
+      }
+      return url;
     }
     
-    function fill_url (url, data) {
-        var key, u, val;
-        for (key in data) {
-            val = data[key];
-            u = url.replace('{'+key+'}', val);
-            if (u != url) {
-                url = u;
-                delete data[key];
-            }
-        }
-        return url;
+    // public functions
+    
+    function ajax (settings) {
+      settings.type = settings.type || "GET";
+          
+      if (typeof settings.data !== "string")
+      if (settings.data !== undefined)
+      if (settings.data !== null) {
+          settings.data = $.param(settings.data);
+      }
+      
+      settings.data = settings.data || "";
+      
+      if (!/^(get)$/i.test(settings.type))
+      if (!/(authenticity_token=)/i.test(settings.data)) {
+          settings.data += (settings.data ? "&" : "") + "authenticity_token=" + encodeURIComponent(AUTH_TOKEN);
+      }
+      
+      if (!/^(get|post)$/i.test(settings.type)) {
+          settings.data += (settings.data ? "&" : "") + "_method=" + settings.type.toLowerCase();
+          settings.type = "POST";
+      }
+
+      return _ajax.call(this, settings);
+    }
+    
+    function read () {
+      collect_options.apply(this, arguments);
+      return $.ajax(options);      
+    }
+    
+    function create () {
+      collect_options.apply(this, arguments);
+      options = $.extend({ type: 'POST' }, options);
+      return $.ajax(options);      
+    }
+    
+    function update () {
+      collect_options.apply(this, arguments);
+      options = $.extend({ type: 'PUT' }, options);
+      return $.ajax(options);      
+    }
+    
+    function destroy () {
+      collect_options.apply(this, arguments);
+      options = $.extend({ type: 'DELETE' }, options);
+      return $.ajax(options);      
     }
     
     $.extend({
-        ajax: function(settings) {
-            settings.type = settings.type || "GET";
-                
-            if (typeof settings.data !== "string")
-            if (settings.data !== undefined)
-            if (settings.data !== null) {
-                settings.data = $.param(settings.data);
-            }
-            
-            settings.data = settings.data || "";
-            
-            if ("AUTH_TOKEN" in window)
-            if (!/^(get)$/i.test(settings.type))
-            if (!/(authenticity_token=)/i.test(settings.data)) {
-                settings.data += (settings.data ? "&" : "") + "authenticity_token=" + encodeURIComponent(AUTH_TOKEN);
-            }
-            
-            if (!/^(get|post)$/i.test(settings.type)) {
-                settings.data += (settings.data ? "&" : "") + "_method=" + settings.type.toLowerCase();
-                settings.type = "POST";
-            }
-            
-            return _ajax.call(this, settings);
-        },
-        
-        read: function() {
-           collect_options.apply(this, arguments);
-           return $.ajax(options);
-        },
-        
-        create: function() {
-           collect_options.apply(this, arguments);
-           options = $.extend({ type: 'POST' }, options);
-           return $.ajax(options);
-        },
-        
-        update: function() {
-            collect_options.apply(this, arguments);
-            options = $.extend({ type: 'PUT' }, options);
-            return $.ajax(options);
-        },
-        
-        destroy: function() {
-            collect_options.apply(this, arguments);
-            options = $.extend({ type: 'DELETE' }, options);
-            return $.ajax(options);
-        }
+      ajax:    ajax,        
+      read:    read,        
+      create:  create,        
+      update:  update,        
+      destroy: destroy
     });
     
 })(jQuery);
