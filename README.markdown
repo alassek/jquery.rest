@@ -29,15 +29,14 @@ Create a new 'task' record with a success callback
 
     $.create(
       '/tasks',
-      { description: 'do something' },
+      { description: 'follow up after meeting' },
       function (reponse) {
         alert('successfully added task.');
       }
     );
-
-will result in:
-
-    [POST] '/tasks?description=do%20something'
+    // => [POST] /tasks
+    // => authenticity_token: K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=
+    // => description: follow up after meeting
     
 Read an existing 'account' object and add it to the page (this callback is making some assumptions about your controller -- YMMV)
 
@@ -46,33 +45,37 @@ Read an existing 'account' object and add it to the page (this callback is makin
       function (response) {
         $('ul#accounts').append(response);
       }
-    );
-    
-    [GET] '/accounts/2486'
+    );    
+    // => [GET] /accounts/2486
 
 Update an existing 'task' record with ID 54
 
     $.update(
       '/tasks/54',
       { description: 'lunch tomorrow after 1pm' }
-    );
-    
-    [POST] '/tasks/54?_method=update&description=lunch%20tomorrow%20after%201pm'
+    );    
+    // => [POST] /tasks/54
+    // => authenticity_token: K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=
+    // => _method: update
+    // => description: lunch tomorrow after 1pm
 
 Update a nested 'task' record using dynamic IDs
 
     $.update(
       '/accounts/{account_id}/tasks/{id}',
       { id: 54, account_id: 11387, description: 'lunch tomorrow after 1pm' }
-    );
-    
-    [POST] '/accounts/11387/tasks/54?_method=update&description=lunch%20tomorrow%20after%201pm'
+    );    
+    // => [POST] /accounts/11387/tasks/54
+    // => authenticity_token: K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=
+    // => _method: update
+    // => description: lunch tomorrow after 1pm
 
 Delete a 'task' object with ID 54
 
     $.destroy('/tasks/54')
     
-    [POST] '/tasks/54?_method=delete'
+    // => [POST] /tasks/54
+    // => _method: delete
     
 Delete a 'task' object using alternate syntax
 
@@ -82,6 +85,8 @@ Delete a 'task' object using alternate syntax
         alert('successfully deleted task.');
       }
     });
+    // => [POST] /tasks/54
+    // => _method: delete
 
 ### Regarding authenticity_token ###
 
