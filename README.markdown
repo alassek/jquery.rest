@@ -91,3 +91,5 @@ Delete a 'task' object using alternate syntax
 ### Regarding authenticity_token ###
 
 Currently this assumes that you are putting the `authenticity_token` for the page in a JS variable called `window.AUTH_TOKEN`. This is simple enough to change if you want to do it differently.
+
+If you do not define window.AUTH_TOKEN, jquery.rest will simply ignore this feature.
