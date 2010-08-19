@@ -78,6 +78,7 @@
       
       settings.data = settings.data || "";
       
+      if ("AUTH_TOKEN" in window)
       if (!/^(get)$/i.test(settings.type))
       if (!/(authenticity_token=)/i.test(settings.data)) {
           settings.data += (settings.data ? "&" : "") + "authenticity_token=" + encodeURIComponent(AUTH_TOKEN);
@@ -93,24 +94,25 @@
     
     function read () {
       collect_options.apply(this, arguments);
-      return $.ajax(options);      
+      $.extend(options, { type: 'GET' })
+      return $.ajax(options);
     }
     
     function create () {
       collect_options.apply(this, arguments);
-      options = $.extend({ type: 'POST' }, options);
+      $.extend(options, { type: 'POST' });
       return $.ajax(options);      
     }
     
     function update () {
       collect_options.apply(this, arguments);
-      options = $.extend({ type: 'PUT' }, options);
+      $.extend(options, { type: 'PUT' });
       return $.ajax(options);      
     }
     
     function destroy () {
       collect_options.apply(this, arguments);
-      options = $.extend({ type: 'DELETE' }, options);
+      $.extend(options, { type: 'DELETE' });
       return $.ajax(options);      
     }
     
