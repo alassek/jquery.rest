@@ -71,8 +71,7 @@
       settings.type = settings.type || "GET";
           
       if (typeof settings.data !== "string")
-      if (settings.data !== undefined)
-      if (settings.data !== null) {
+      if (settings.data != null) {
           settings.data = $.param(settings.data);
       }
       
