@@ -88,8 +88,11 @@ Delete a 'task' object using alternate syntax
     // => [POST] /tasks/54
     // => _method: delete
 
-### Regarding authenticity_token ###
+### Setting csrf token & method parameter ###
 
-Currently this assumes that you are putting the `authenticity_token` for the page in a JS variable called `window.AUTH_TOKEN`. This is simple enough to change if you want to do it differently.
+There is a global object called $.restSetup that you can modify in your application's Javascript startup to match your environment.
 
-If you do not define `window.AUTH_TOKEN`, jquery.rest will simply ignore this feature.
+`$.restSetup.csrf` is an object that contains the token to be passed back to the server for `POST` requests. Either set `$.restSetup.csrf.authenticity_token`
+however you like, or you can replace `$.restSetup.csrf` entirely with your own name-value pair. The csrf object will be added to all non-GET requests.
+
+`$.restSetup.methodParam` can be changed if you pass back the REST method differently. Defaults to `_method`.
