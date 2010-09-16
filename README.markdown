@@ -96,3 +96,17 @@ There is a global object called $.restSetup that you can modify in your applicat
 however you like, or you can replace `$.restSetup.csrf` entirely with your own name-value pair. The csrf object will be added to all non-GET requests.
 
 `$.restSetup.methodParam` can be changed if you pass back the REST method differently. Defaults to `_method`.
+
+Example:
+
+    $.extend($.restSetup, {
+      methodParam: 'action',
+      csrf: {
+        '_csrf': encodeURIComponent(AUTH_TOKEN)
+      }
+    });
+    
+    $.destroy('/tasks/54');
+    // => [POST] /tasks/54
+    // => action: delete
+    // => _csrf: K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=
