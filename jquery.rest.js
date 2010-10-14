@@ -30,10 +30,10 @@
     };
     
     // jQuery doesn't provide a better way of intercepting the ajax settings object
-    var _ajax = $.ajax, 
-        options = { dataType: 'json' };
+    var _ajax = $.ajax, options;
     
     function collect_options (url, data, success, error) {
+      options = { dataType: 'json' };
       if (arguments.length === 1 && typeof arguments[0] !== "string") {
         options = $.extend(options, url);
         if ("url" in options)
