@@ -22,12 +22,16 @@
 
 (function($){
     
-    // Change the values of this global object if your csrf token or method
-    // parameter are different. You can set csrf to null to skip it (but you shouldn't)
-    $.restSetup = {
-      csrf: { authenticity_token: null },
-      methodParam: '_method'
-    };
+    // Change the values of this global object if your method parameter is different.
+    $.restSetup = { methodParam: '_method' };
+    
+    // collects the csrf-param and csrf-token from meta tags
+    $(document).ready(function(){
+      $.extend($.restSetup, {
+        csrfParam: $('meta[name=csrf-param]').attr('content'),
+        csrfToken: $('meta[name=csrf-token]').attr('content')
+      });
+    });
     
     // jQuery doesn't provide a better way of intercepting the ajax settings object
     var _ajax = $.ajax, options;
@@ -87,7 +91,7 @@
       if ($.restSetup.csrf && !$.isEmptyObject($.restSetup.csrf))
       if (!/^(get)$/i.test(settings.type))
       if (!/(authenticity_token=)/i.test(settings.data)) {
-          settings.data += (settings.data ? "&" : "") + $.param($.restSetup.csrf);
+          settings.data += (settings.data ? "&" : "") + $.restSetup.csrfParam + '=' + $restSetup.csrfToken;
       }
       
       if (!/^(get|post)$/i.test(settings.type)) {

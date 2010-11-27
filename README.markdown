@@ -92,8 +92,8 @@ Delete a 'task' object using alternate syntax
 
 There is a global object called $.restSetup that you can modify in your application's Javascript startup to match your environment.
 
-`$.restSetup.csrf` is an object that contains the token to be passed back to the server for `POST` requests. Either set `$.restSetup.csrf.authenticity_token`
-however you like, or you can replace `$.restSetup.csrf` entirely with your own name-value pair. The csrf object will be added to all non-GET requests.
+`$.restSetup.csrfParam` and `$.restSetup.csrfToken` define how the authenticity token is formatted. By default they are loaded from
+meta tags named `csrf-param` and `csrf-token`. Set them manually if you are unable to follow this convention.
 
 `$.restSetup.methodParam` can be changed if you pass back the REST method differently. Defaults to `_method`.
 
@@ -101,10 +101,14 @@ Example:
 
     $.extend($.restSetup, {
       methodParam: 'action',
-      csrf: {
-        '_csrf': encodeURIComponent(AUTH_TOKEN)
-      }
+      csrfParam: '_csrf',
+      csrfToken: encodeURIComponent(AUTH_TOKEN)
     });
+    
+    -- or --
+    
+    <meta name="csrf-param" content="_csrf" />
+    <meta name="csrf-token" content="K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=" />
     
     $.destroy('/tasks/54');
     // => [POST] /tasks/54
