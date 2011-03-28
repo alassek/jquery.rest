@@ -91,7 +91,7 @@
       if ($.restSetup.csrf && !$.isEmptyObject($.restSetup.csrf))
       if (!/^(get)$/i.test(settings.type))
       if (!/(authenticity_token=)/i.test(settings.data)) {
-          settings.data += (settings.data ? "&" : "") + $.restSetup.csrfParam + '=' + $restSetup.csrfToken;
+          settings.data += (settings.data ? "&" : "") + $.restSetup.csrfParam + '=' + $.restSetup.csrfToken;
       }
       
       if (!/^(get|post)$/i.test(settings.type)) {
