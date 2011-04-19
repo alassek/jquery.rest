@@ -27,66 +27,77 @@ In addition to these parameters, you can simply pass a standard jQuery.Ajax opti
 
 Create a new 'task' record with a success callback
 
-    $.create(
-      '/tasks',
-      { description: 'follow up after meeting' },
-      function (reponse) {
-        alert('successfully added task.');
-      }
-    );
-    // => [POST] /tasks
-    // => authenticity_token: K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=
-    // => description: follow up after meeting
+``` javascript
+$.create(
+  '/tasks',
+  { description: 'follow up after meeting' },
+  function (reponse) {
+    alert('successfully added task.');
+  }
+);
+// => [POST] /tasks
+// => authenticity_token: K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=
+// => description: follow up after meeting
+```
     
 Read an existing 'account' object and add it to the page (this callback is making some assumptions about your controller -- YMMV)
 
-    $.read(
-      '/accounts/2486',
-      function (response) {
-        $('ul#accounts').append(response);
-      }
-    );    
-    // => [GET] /accounts/2486
+``` javascript
+$.read(
+  '/accounts/2486',
+  function (response) {
+    $('ul#accounts').append(response);
+  }
+);    
+// => [GET] /accounts/2486
+```
 
 Update an existing 'task' record with ID 54
 
-    $.update(
-      '/tasks/54',
-      { description: 'lunch tomorrow after 1pm' }
-    );    
-    // => [POST] /tasks/54
-    // => authenticity_token: K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=
-    // => _method: update
-    // => description: lunch tomorrow after 1pm
+``` javascript
+$.update(
+  '/tasks/54',
+  { description: 'lunch tomorrow after 1pm' }
+);    
+// => [POST] /tasks/54
+// => authenticity_token: K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=
+// => _method: update
+// => description: lunch tomorrow after 1pm
+```
 
 Update a nested 'task' record using dynamic IDs
 
-    $.update(
-      '/accounts/{account_id}/tasks/{id}',
-      { id: 54, account_id: 11387, description: 'lunch tomorrow after 1pm' }
-    );    
-    // => [POST] /accounts/11387/tasks/54
-    // => authenticity_token: K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=
-    // => _method: update
-    // => description: lunch tomorrow after 1pm
+``` javascript
+$.update(
+  '/accounts/{account_id}/tasks/{id}',
+  { id: 54, account_id: 11387, description: 'lunch tomorrow after 1pm' }
+);    
+// => [POST] /accounts/11387/tasks/54
+// => authenticity_token: K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=
+// => _method: update
+// => description: lunch tomorrow after 1pm
+```
 
 Delete a 'task' object with ID 54
 
-    $.destroy('/tasks/54')
-    
-    // => [POST] /tasks/54
-    // => _method: delete
+``` javascript
+$.destroy('/tasks/54')
+// => [POST] /tasks/54
+// => _method: delete
+```
     
 Delete a 'task' object using alternate syntax
 
-    $.destroy({
-      url: '/tasks/54',
-      success: function (response) {
-        alert('successfully deleted task.');
-      }
-    });
-    // => [POST] /tasks/54
-    // => _method: delete
+``` javascript
+$.destroy({
+  url: '/tasks/54',
+  success: function (response) {
+    alert('successfully deleted task.');
+  }
+});
+// => [POST] /tasks/54
+// => _method: delete
+```
 
 ### Setting csrf token & method parameter ###
 
@@ -99,18 +110,22 @@ meta tags named `csrf-param` and `csrf-token`. Set them manually if you are unab
 
 Example:
 
-    $.extend($.restSetup, {
-      methodParam: 'action',
-      csrfParam: '_csrf',
-      csrfToken: encodeURIComponent(AUTH_TOKEN)
-    });
-    
-    -- or --
+``` javascript
+$.extend($.restSetup, {
+  methodParam: 'action',
+  csrfParam: '_csrf',
+  csrfToken: encodeURIComponent(AUTH_TOKEN)
+});
+```
+
+**-- or --**
     
     <meta name="csrf-param" content="_csrf" />
     <meta name="csrf-token" content="K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=" />
-    
-    $.destroy('/tasks/54');
-    // => [POST] /tasks/54
-    // => action: delete
-    // => _csrf: K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=
+
+``` javascript    
+$.destroy('/tasks/54');
+// => [POST] /tasks/54
+// => action: delete
+// => _csrf: K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=
+```
