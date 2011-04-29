@@ -116,13 +116,23 @@
     
     function update () {
       collect_options.apply(this, arguments);
-      $.extend(options, { type: 'PUT' });
-      return $.ajax(options);      
+      $.extend(options, {
+        type: 'PUT',
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader('X-HTTP-Method-Override', 'PUT');
+        }
+      });
+      return $.ajax(options);
     }
     
     function destroy () {
       collect_options.apply(this, arguments);
-      $.extend(options, { type: 'DELETE' });
+      $.extend(options, {
+        type: 'DELETE',
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader('X-HTTP-Method-Override', 'DELETE');
+        }
+      });
       return $.ajax(options);      
     }
     
