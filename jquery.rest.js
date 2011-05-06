@@ -88,7 +88,7 @@
       
       settings.data = settings.data || "";
       
-      if ($.restSetup.csrf && !$.isEmptyObject($.restSetup.csrf))
+      if ($.restSetup.csrfParam && $.restSetup.csrfToken)
       if (!/^(get)$/i.test(settings.type))
       if (!/(authenticity_token=)/i.test(settings.data)) {
           settings.data += (settings.data ? "&" : "") + $.restSetup.csrfParam + '=' + $.restSetup.csrfToken;
