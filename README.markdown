@@ -99,6 +99,14 @@ $.destroy({
 // => _method: delete
 ```
 
+### Using $.Deferred ###
+
+jQuery.rest helpers all support the new jQuery.Deferred syntax:
+
+``` javascript
+$.read('/tasks/{id}.json', { id: 34 }).then(function (task) { /* do something with task */ });
+```
+
 ### Setting csrf token & method parameter ###
 
 There is a global object called $.restSetup that you can modify in your application's Javascript startup to match your environment.
