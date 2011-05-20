@@ -13,15 +13,42 @@ There are four public jQuery methods created by this plugin:
 
 Each function accepts 1-4 parameters:
 
-    URL [, data ] [, success ] [, failure ]
+    url [, data [, success [, error ] ] ]
 
-    URL: The url of the resource, which can include a dynamically populated value surrounded by {braces}
-    data: (optional) The data to post to the resource, also used to populate dynamic values.
-          In GET requests, data will be added to the url as query-string parameters
-    success: (optional) The success callback
-    failure: (optional) The failure callback
+* `url`: (string) The url of the resource, which can include a dynamically populated value surrounded by {braces}
+* `data`: (hash | string) The data to post to the resource, also used to populate dynamic values.
+  * In GET requests, data will be added to the url as query-string parameters
+* `success`: (function) The success callback
+* `error`: (function) The error callback
 
 In addition to these parameters, you can simply pass a standard jQuery.Ajax options object instead as the only parameter.
+
+### Breaking change: success, error callback parameters ###
+
+Both `success` and `error` callbacks are passed a `headers` object whose key-value pairs correspond to the HTTP Response headers.
+
+* `success`
+  * `data`: The reponse data for the request
+  * `headers`
+  * `xhr`
+* `error`
+  * `xhr`
+  * `headers`
+
+In addition to being passed to the callbacks, this parsed object is attached directly to the `xhr` as well.
+
+``` javascript
+var xhr = $.read('/tasks.json');
+xhr.responseHeaders
+// => Object {
+// =>   Connection: "close",
+// =>   Content-Length: "543",
+// =>   Content-Type: "application/json;charset=utf-8"
+// => }
+```
+
+This was inspired by the [GitHub][gh] API which makes use of custom HTTP response headers and the fact that `xhr.getAllReponseHeaders()` is next to useless.
+  [gh]: http://developer.github.com/
 
 ### Example ###
 
@@ -39,7 +66,7 @@ $.create(
 // => authenticity_token: K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=
 // => description: follow up after meeting
 ```
-    
+
 Read an existing 'account' object and add it to the page (this callback is making some assumptions about your controller -- YMMV)
 
 ``` javascript
@@ -48,7 +75,7 @@ $.read(
   function (response) {
     $('ul#accounts').append(response);
   }
-);    
+);
 // => [GET] /accounts/2486
 ```
 
@@ -58,7 +85,7 @@ Update an existing 'task' record with ID 54
 $.update(
   '/tasks/54',
   { description: 'lunch tomorrow after 1pm' }
-);    
+);
 // => [POST] /tasks/54
 // => authenticity_token: K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=
 // => _method: update
@@ -71,7 +98,7 @@ Update a nested 'task' record using dynamic IDs
 $.update(
   '/accounts/{account_id}/tasks/{id}',
   { id: 54, account_id: 11387, description: 'lunch tomorrow after 1pm' }
-);    
+);
 // => [POST] /accounts/11387/tasks/54
 // => authenticity_token: K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=
 // => _method: update
@@ -85,7 +112,7 @@ $.destroy('/tasks/54')
 // => [POST] /tasks/54
 // => _method: delete
 ```
-    
+
 Delete a 'task' object using alternate syntax
 
 ``` javascript
@@ -127,11 +154,11 @@ $.extend($.restSetup, {
 ```
 
 **-- or --**
-    
+
     <meta name="csrf-param" content="_csrf" />
     <meta name="csrf-token" content="K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=" />
 
-``` javascript    
+``` javascript
 $.destroy('/tasks/54');
 // => [POST] /tasks/54
 // => action: delete
