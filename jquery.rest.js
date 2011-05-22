@@ -25,12 +25,10 @@
     // Change the values of this global object if your method parameter is different.
     $.restSetup = { methodParam: '_method' };
 
-    // collects the csrf-param and csrf-token from meta tags
+    // collect csrf param & token from meta tags if they haven't already been set
     $(document).ready(function(){
-      $.extend($.restSetup, {
-        csrfParam: $('meta[name=csrf-param]').attr('content'),
-        csrfToken: $('meta[name=csrf-token]').attr('content')
-      });
+      $.restSetup.csrfParam = $.restSetup.csrfParam || $('meta[name=csrf-param]').attr('content');
+      $.restSetup.csrfToken = $.restSetup.csrfToken || $('meta[name=csrf-token]').attr('content');
     });
 
     // jQuery doesn't provide a better way of intercepting the ajax settings object
