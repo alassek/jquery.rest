@@ -113,11 +113,6 @@
           settings.data += (settings.data ? "&" : "") + $.restSetup.csrfParam + '=' + $.restSetup.csrfToken;
       }
 
-      if (!/^(get|post)$/i.test(settings.type)) {
-          settings.data += (settings.data ? "&" : "") + $.restSetup.methodParam + '=' + settings.type.toLowerCase();
-          settings.type = "POST";
-      }
-
       return _ajax.call(this, settings);
     }
 
