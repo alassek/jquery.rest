@@ -55,6 +55,7 @@
         options = $.extend(options, {
           url: url,
           data: data,
+          contentType: "application/json",
           success: function (data, text, xhr) {
             if (success) success.call(options.context || options, data, get_headers(xhr), xhr);
           },
