@@ -55,6 +55,7 @@
         options = $.extend(options, {
           url: url,
           data: data,
+          contentType: "application/json",
           success: function (data, text, xhr) {
             if (success) success.call(options.context || options, data, get_headers(xhr), xhr);
           },
@@ -110,11 +111,6 @@
       if (!/^(get)$/i.test(settings.type))
       if (!/(authenticity_token=)/i.test(settings.data)) {
           settings.data += (settings.data ? "&" : "") + $.restSetup.csrfParam + '=' + $.restSetup.csrfToken;
-      }
-
-      if (!/^(get|post)$/i.test(settings.type)) {
-          settings.data += (settings.data ? "&" : "") + $.restSetup.methodParam + '=' + settings.type.toLowerCase();
-          settings.type = "POST";
       }
 
       return _ajax.call(this, settings);
