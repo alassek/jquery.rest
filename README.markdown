@@ -86,9 +86,8 @@ $.update(
   '/tasks/54',
   { description: 'lunch tomorrow after 1pm' }
 );
-// => [POST] /tasks/54
+// => [PUT] /tasks/54
 // => authenticity_token: K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=
-// => _method: update
 // => description: lunch tomorrow after 1pm
 ```
 
@@ -99,9 +98,8 @@ $.update(
   '/accounts/{account_id}/tasks/{id}',
   { id: 54, account_id: 11387, description: 'lunch tomorrow after 1pm' }
 );
-// => [POST] /accounts/11387/tasks/54
+// => [PUT] /accounts/11387/tasks/54
 // => authenticity_token: K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=
-// => _method: update
 // => description: lunch tomorrow after 1pm
 ```
 
@@ -109,8 +107,7 @@ Delete a 'task' object with ID 54
 
 ``` javascript
 $.destroy('/tasks/54')
-// => [POST] /tasks/54
-// => _method: delete
+// => [DELETE] /tasks/54
 ```
 
 Delete a 'task' object using alternate syntax
@@ -122,8 +119,7 @@ $.destroy({
     alert('successfully deleted task.');
   }
 });
-// => [POST] /tasks/54
-// => _method: delete
+// => [DELETE] /tasks/54
 ```
 
 ### Using $.Deferred ###
@@ -141,12 +137,15 @@ There is a global object called $.restSetup that you can modify in your applicat
 `$.restSetup.csrfParam` and `$.restSetup.csrfToken` define how the authenticity token is formatted. By default they are loaded from
 meta tags named `csrf-param` and `csrf-token`. Set them manually if you are unable to follow this convention.
 
+PUT and DELETE verbs are used by default, but if you need to tunnel them through the POST method instead: `$.restSetup.useMethodOverride = true;`
+
 `$.restSetup.methodParam` can be changed if you pass back the REST method differently. Defaults to `_method`.
 
 Example:
 
 ``` javascript
 $.extend($.restSetup, {
+  useMethodOverride: true,
   methodParam: 'action',
   csrfParam: '_csrf',
   csrfToken: encodeURIComponent(AUTH_TOKEN)
