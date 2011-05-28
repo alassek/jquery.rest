@@ -22,8 +22,19 @@
 
 (function($){
 
+    var _ajax = $.ajax, trim;
+
+    // support JS < 1.8.1
+    trim = String.prototype.trim || function () {
+      return this.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+    }
+
+    // Will only use method override if $.restSetup.useMethodOverride is set to true
     // Change the values of this global object if your method parameter is different.
-    $.restSetup = { methodParam: '_method' };
+    $.restSetup = { 
+      methodParam: '_method',
+      useMethodOverride: false
+    };
 
     // collect csrf param & token from meta tags if they haven't already been set
     $(document).ready(function(){
@@ -31,11 +42,8 @@
       $.restSetup.csrfToken = $.restSetup.csrfToken || $('meta[name=csrf-token]').attr('content');
     });
 
-    // jQuery doesn't provide a better way of intercepting the ajax settings object
-    var _ajax = $.ajax, options, trim;
-
     function collect_options (url, data, success, error) {
-      options = { dataType: 'json' };
+      var options = { dataType: 'json' };
       if (arguments.length === 1 && typeof arguments[0] !== "string") {
         options = $.extend(options, url);
         if ("url" in options)
@@ -63,6 +71,7 @@
           }
         });
       }
+      return options;
     }
 
     function fill_url (url, data) {
@@ -90,15 +99,8 @@
       return headers;
     }
 
-    // support JS < 1.8.1
-    trim = String.prototype.trim || function () {
-      return this.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-    }
-
-    // public functions
-
-    function ajax (settings) {
-      settings.type = settings.type || "GET";
+    $.ajax = function (settings) {
+      var csrfParam = new RegExp("(" + $.restSetup.csrfParam + "=)", "i");
 
       if (typeof settings.data !== "string")
       if (settings.data != null) {
@@ -108,11 +110,15 @@
       settings.data = settings.data || "";
       if ($.restSetup.csrfParam && $.restSetup.csrfToken)
       if (!/^(get)$/i.test(settings.type))
-      if (!/(authenticity_token=)/i.test(settings.data)) {
+      if (!csrfParam.test(settings.data)) {
           settings.data += (settings.data ? "&" : "") + $.restSetup.csrfParam + '=' + $.restSetup.csrfToken;
       }
 
+      if ($.restSetup.useMethodOverride)
       if (!/^(get|post)$/i.test(settings.type)) {
+          settings.beforeSend = function (xhr) {
+            xhr.setRequestHeader('X-HTTP-Method-Override', settings.type);
+          };
           settings.data += (settings.data ? "&" : "") + $.restSetup.methodParam + '=' + settings.type.toLowerCase();
           settings.type = "POST";
       }
@@ -120,47 +126,29 @@
       return _ajax.call(this, settings);
     }
 
-    function read () {
-      collect_options.apply(this, arguments);
-      $.extend(options, { type: 'GET' })
+    $.read = function () {
+      var options = collect_options.apply(this, arguments);
+      options.type = 'GET';
       return $.ajax(options);
     }
 
-    function create () {
-      collect_options.apply(this, arguments);
-      $.extend(options, { type: 'POST' });
+    $.create = function () {
+      var options = collect_options.apply(this, arguments);
+      options.type = 'POST';
       return $.ajax(options);
     }
 
-    function update () {
-      collect_options.apply(this, arguments);
-      $.extend(options, {
-        type: 'PUT',
-        beforeSend: function (xhr) {
-          xhr.setRequestHeader('X-HTTP-Method-Override', 'PUT');
-        }
-      });
+    $.update = function () {
+      var options = collect_options.apply(this, arguments);
+      options.type = 'PUT';
       return $.ajax(options);
     }
 
-    function destroy () {
-      collect_options.apply(this, arguments);
-      $.extend(options, {
-        type: 'DELETE',
-        beforeSend: function (xhr) {
-          xhr.setRequestHeader('X-HTTP-Method-Override', 'DELETE');
-        }
-      });
+    $.destroy = function () {
+      var options = collect_options.apply(this, arguments);
+      options.type = 'DELETE';
       return $.ajax(options);
     }
-
-    $.extend({
-      ajax:    ajax,
-      read:    read,
-      create:  create,
-      update:  update,
-      destroy: destroy
-    });
 
 })(jQuery);
 
