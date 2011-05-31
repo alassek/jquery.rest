@@ -100,7 +100,9 @@
     }
 
     $.ajax = function (settings) {
-      var csrfParam = new RegExp("(" + $.restSetup.csrfParam + "=)", "i");
+      var csrfParam = new RegExp("(" + $.restSetup.csrfParam + "=)", "i"),
+          userBeforeSend = settings.beforeSend,
+          methodOverride;
 
       if (typeof settings.data !== "string")
       if (settings.data != null) {
@@ -116,12 +118,26 @@
 
       if ($.restSetup.useMethodOverride)
       if (!/^(get|post)$/i.test(settings.type)) {
-          settings.beforeSend = function (xhr) {
-            xhr.setRequestHeader('X-HTTP-Method-Override', settings.type);
-          };
+          methodOverride = settings.type.toUpperCase();
           settings.data += (settings.data ? "&" : "") + $.restSetup.methodParam + '=' + settings.type.toLowerCase();
           settings.type = "POST";
       }
+
+      settings.beforeSend = function (xhr) {
+        var context = settings.context || settings,
+            contentType = settings.contentType,
+            resourceContentType = /.*\.(json|xml)/i.exec(settings.url);
+
+        if (!contentType) contentType = $.restSetup.contentType;
+        if (!contentType && resourceContentType) {
+          contentType = 'application/' + resourceContentType[1].toLowerCase();
+        }
+        if (settings.contentType != contentType) $.extend(settings, { contentType: contentType });
+
+        if ( methodOverride ) xhr.setRequestHeader('X-HTTP-Method-Override', methodOverride);
+
+        if ( $.isFunction(userBeforeSend) ) userBeforeSend.apply(context, xhr);
+     }
 
       return _ajax.call(this, settings);
     }

@@ -130,6 +130,16 @@ jQuery.rest helpers all support the new jQuery.Deferred syntax:
 $.read('/tasks/{id}.json', { id: 34 }).then(function (task) { /* do something with task */ });
 ```
 
+### Setting Content-Type header ###
+
+jQuery.rest will look for a content-type setting in three places:
+
+1. `options.contentType` if you're using the alternate syntax
+2. or else `$.restSetup.contentType`
+3. or else it will look for a `json` or `xml` extension on the url resource.
+
+If all three of those sources fail, it will use the browser's default.
+
 ### Setting csrf token & method parameter ###
 
 There is a global object called $.restSetup that you can modify in your application's Javascript startup to match your environment.
