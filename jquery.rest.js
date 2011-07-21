@@ -123,7 +123,7 @@
           settings.type = "POST";
       }
 
-      settings.beforeSend = function (xhr) {
+      settings.beforeSend = function (xhr, ajaxSettings) {
         var context = settings.context || settings,
             contentType = settings.contentType,
             resourceContentType = /.*\.(json|xml)/i.exec(settings.url);
@@ -136,7 +136,7 @@
 
         if ( methodOverride ) xhr.setRequestHeader('X-HTTP-Method-Override', methodOverride);
 
-        if ( $.isFunction(userBeforeSend) ) userBeforeSend.apply(context, xhr);
+        if ( $.isFunction(userBeforeSend) ) userBeforeSend.call(context, xhr, ajaxSettings);
      }
 
       return _ajax.call(this, settings);
