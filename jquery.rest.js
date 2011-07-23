@@ -88,7 +88,9 @@
     }
 
     function get_headers(xhr) {
-      var headers = {}, stringHeaders = xhr.getAllResponseHeaders();
+      // trim the headers because IE likes to include the blank line between the headers
+      // and the content as part of the headers
+      var headers = {}, stringHeaders = trim.call(xhr.getAllResponseHeaders());
       $.each(stringHeaders.split("\n"), function (i, header) {
         if (header.length) {
           var matches = header.match(/^([\w\-]+):(.*)/);
