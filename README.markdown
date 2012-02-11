@@ -173,3 +173,22 @@ $.destroy('/tasks/54');
 // => action: delete
 // => _csrf: K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=
 ```
+
+### Customize HTTP verbs ###
+
+By default, jQuery.rest conforms to Rails' HTTP verbs: POST to create, PUT to update, DELETE to destroy.
+
+Not all RESTful APIs behave this way, and some argue that this isn't actually REST. If you need to override the methods being used, you can customize `$.restSetup.verbs`.
+
+```javascript
+$.restSetup.verbs.update = 'PATCH';
+$.update(
+  '/accounts/{account_id}/tasks/{id}',
+  { id: 54, account_id: 11387, description: 'lunch tomorrow after 1pm' }
+);
+// => [PATCH] /accounts/11387/tasks/54
+// => authenticity_token: K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=
+// => description: lunch tomorrow after 1pm
+```
+
+(`$.read` will of course always use GET, but the others can be changed to anything you desire.)

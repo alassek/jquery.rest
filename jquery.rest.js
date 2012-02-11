@@ -33,7 +33,12 @@
     // Change the values of this global object if your method parameter is different.
     $.restSetup = { 
       methodParam: '_method',
-      useMethodOverride: false
+      useMethodOverride: false,
+      verbs: {
+        create:  'POST',
+        update:  'PUT',
+        destroy: 'DELETE'
+      }
     };
 
     // collect csrf param & token from meta tags if they haven't already been set
@@ -152,19 +157,19 @@
 
     $.create = function () {
       var options = collect_options.apply(this, arguments);
-      options.type = 'POST';
+      options.type = $.restSetup.verbs.create;
       return $.ajax(options);
     }
 
     $.update = function () {
       var options = collect_options.apply(this, arguments);
-      options.type = 'PUT';
+      options.type = $.restSetup.verbs.update;
       return $.ajax(options);
     }
 
     $.destroy = function () {
       var options = collect_options.apply(this, arguments);
-      options.type = 'DELETE';
+      options.type = $.restSetup.verbs.destroy;
       return $.ajax(options);
     }
 
