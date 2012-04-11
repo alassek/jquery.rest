@@ -22,12 +22,7 @@
 
 (function($){
 
-    var _ajax = $.ajax, trim;
-
-    // support JS < 1.8.1
-    trim = String.prototype.trim || function () {
-      return this.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-    }
+    var _ajax = $.ajax;
 
     // Will only use method override if $.restSetup.useMethodOverride is set to true
     // Change the values of this global object if your method parameter is different.
@@ -95,11 +90,11 @@
     function get_headers(xhr) {
       // trim the headers because IE likes to include the blank line between the headers
       // and the content as part of the headers
-      var headers = {}, stringHeaders = trim.call(xhr.getAllResponseHeaders());
+      var headers = {}, stringHeaders = $.trim(xhr.getAllResponseHeaders());
       $.each(stringHeaders.split("\n"), function (i, header) {
         if (header.length) {
           var matches = header.match(/^([\w\-]+):(.*)/);
-          if (matches.length === 3) headers[ matches[1] ] = trim.call(matches[2]);
+          if (matches.length === 3) headers[ matches[1] ] = $.trim(matches[2]);
         }
       });
       xhr.responseHeaders = headers;
