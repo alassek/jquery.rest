@@ -48,7 +48,7 @@
         options = $.extend(options, url);
         if ("url" in options)
         if ("data" in options) {
-          fill_url(options.url, options.data);
+          options.url = fill_url(options.url, options.data);
         }
       } else {
         // shift arguments if data argument was omitted
