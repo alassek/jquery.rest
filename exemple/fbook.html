@@ -1,0 +1,18 @@
+<html>
+  <head>
+    <title>REST - Facebook</title>
+    <script language="JavaScript" src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+    <script language="JavaScript" src="../jquery.rest.js"></script>
+  </head>
+  <body>
+    <script language="JavaScript">
+      $(document).ready(function() {
+        $.rest.get('https://graph.facebook.com/bugotech', {fields: 'id,name,link'}, function(data) {
+          console.debug(data);
+          $('#box').html('Nome: ' + data.name + ' <a href="' + data.link + '" target="_blank">' + data.link + '</a>');
+        });
+      });
+    </script>
+    <div id="box"></div>
+  </body>
+</html>
