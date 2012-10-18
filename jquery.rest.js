@@ -22,18 +22,13 @@
 
 (function($){
 
-    var _ajax = $.ajax;
+    //var _ajax = $.ajax;
 
     // Will only use method override if $.restSetup.useMethodOverride is set to true
     // Change the values of this global object if your method parameter is different.
     $.restSetup = { 
       methodParam: '_method',
-      useMethodOverride: false,
-      verbs: {
-        create:  'POST',
-        update:  'PUT',
-        destroy: 'DELETE'
-      }
+      useMethodOverride: false
     };
 
     // collect csrf param & token from meta tags if they haven't already been set
@@ -101,7 +96,9 @@
       return headers;
     }
 
-    $.ajax = function (settings) {
+    $.rest = {};
+
+    $.ajaxRequest = function (settings) {
       var csrfParam = new RegExp("(" + $.restSetup.csrfParam + "=)", "i"),
           userBeforeSend = settings.beforeSend,
           methodOverride;
@@ -141,31 +138,31 @@
         if ( $.isFunction(userBeforeSend) ) userBeforeSend.call(context, xhr, ajaxSettings);
      }
 
-      return _ajax.call(this, settings);
+      return $.ajax.call(this, settings);
     }
 
-    $.read = function () {
+    $.rest.get = function () {
       var options = collect_options.apply(this, arguments);
       options.type = 'GET';
-      return $.ajax(options);
+      return $.ajaxRequest(options);
     }
 
-    $.create = function () {
+    $.rest.post = function () {
       var options = collect_options.apply(this, arguments);
-      options.type = $.restSetup.verbs.create;
-      return $.ajax(options);
+      options.type = 'POST';
+      return $.ajaxRequest(options);
     }
 
-    $.update = function () {
+    $.rest.put = function () {
       var options = collect_options.apply(this, arguments);
-      options.type = $.restSetup.verbs.update;
-      return $.ajax(options);
+      options.type = 'PUT';
+      return $.ajaxRequest(options);
     }
 
-    $.destroy = function () {
+    $.rest.delete = function () {
       var options = collect_options.apply(this, arguments);
-      options.type = $.restSetup.verbs.destroy;
-      return $.ajax(options);
+      options.type = 'DELETE';
+      return $.ajaxRequest(options);
     }
 
 })(jQuery);

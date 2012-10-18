@@ -1,15 +1,15 @@
 ## jQuery.rest ##
 
-A plugin to ease AJAX interaction with RESTful APIs such as Rails
+A plugin to ease AJAX interaction with RESTful APIs
 
 ### Accepted Parameters ###
 
 There are four public jQuery methods created by this plugin:
 
-    jQuery.create
-    jQuery.read
-    jQuery.update
-    jQuery.destroy
+    jQuery.rest.post
+    jQuery.rest.get
+    jQuery.rest.put
+    jQuery.rest.delete
 
 Each function accepts 1-4 parameters:
 
@@ -55,7 +55,7 @@ This was inspired by the [GitHub][gh] API which makes use of custom HTTP respons
 Create a new 'task' record with a success callback
 
 ``` javascript
-$.create(
+$.rest.post(
   '/tasks',
   { description: 'follow up after meeting' },
   function (reponse) {
@@ -82,7 +82,7 @@ $.read(
 Update an existing 'task' record with ID 54
 
 ``` javascript
-$.update(
+$.rest.put(
   '/tasks/54',
   { description: 'lunch tomorrow after 1pm' }
 );
@@ -94,7 +94,7 @@ $.update(
 Update a nested 'task' record using dynamic IDs
 
 ``` javascript
-$.update(
+$.rest.put(
   '/accounts/{account_id}/tasks/{id}',
   { id: 54, account_id: 11387, description: 'lunch tomorrow after 1pm' }
 );
@@ -106,14 +106,14 @@ $.update(
 Delete a 'task' object with ID 54
 
 ``` javascript
-$.destroy('/tasks/54')
+$.rest.delete('/tasks/54')
 // => [DELETE] /tasks/54
 ```
 
 Delete a 'task' object using alternate syntax
 
 ``` javascript
-$.destroy({
+$.rest.delete({
   url: '/tasks/54',
   success: function (response) {
     alert('successfully deleted task.');
@@ -168,27 +168,8 @@ $.extend($.restSetup, {
     <meta name="csrf-token" content="K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=" />
 
 ``` javascript
-$.destroy('/tasks/54');
+$.rest.delete('/tasks/54');
 // => [POST] /tasks/54
 // => action: delete
 // => _csrf: K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=
 ```
-
-### Customize HTTP verbs ###
-
-By default, jQuery.rest conforms to Rails' HTTP verbs: POST to create, PUT to update, DELETE to destroy.
-
-Not all RESTful APIs behave this way, and some argue that this isn't actually REST. If you need to override the methods being used, you can customize `$.restSetup.verbs`.
-
-```javascript
-$.restSetup.verbs.update = 'PATCH';
-$.update(
-  '/accounts/{account_id}/tasks/{id}',
-  { id: 54, account_id: 11387, description: 'lunch tomorrow after 1pm' }
-);
-// => [PATCH] /accounts/11387/tasks/54
-// => authenticity_token: K06+3rRMlMuSoG60+Uw6UIo6UsZBbtIIPu2GaMbjf9s=
-// => description: lunch tomorrow after 1pm
-```
-
-(`$.read` will of course always use GET, but the others can be changed to anything you desire.)
